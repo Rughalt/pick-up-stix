@@ -87,21 +87,26 @@ export default class ItemConfigApplication extends FormApplication {
 		}
 
 		// set click listeners on the buttons to pick up individual items
-		$(html).find(`a.item-take`).click(e => this._onTakeItem(e));
+		$(html).find(`a.item-take`).on('click', e => this._onTakeItem(e));
 
 		// set click listeners on the buttons to delete items
-		$(html).find(`a.item-delete`).click(e => this._onDeleteItem(e));
+		$(html).find(`a.item-delete`).on('click', e => this._onDeleteItem(e));
 
 		if (game.user.isGM) {
 			$(html)
 				.find('.configure-sound')
-				.click(e => this._onConfigureSound(e))
-				.css('cursor', 'pointer');
+				.css('cursor', 'pointer')
+				.on('click', e => this._onConfigureSound(e));
+
+			$(html)
+				.find('.configure-keys')
+				.css('cursor', 'pointer')
+				.on('click', e => this._onConfigureKeys(e));
 		}
 
 		if (this._currencyEnabled) {
 			// set click listener for taking currency
-			$(html).find(`a.currency-take`).click(e => this._onTakeCurrency(e));
+			$(html).find(`a.currency-take`).on('click', e => this._onTakeCurrency(e));
 		}
 
 		$(html).find(`input[type="text"]`).prop('readonly', !game.user.isGM);
@@ -116,6 +121,10 @@ export default class ItemConfigApplication extends FormApplication {
 		if (!game.user.isGM) {
 			$(html).find(`input[type="text"]`).addClass('isNotGM');
 		}
+	}
+
+	private _onConfigureKeys(e): void {
+		console.log(`pick-up-stix | ItemConfigApplication ${this.appId} | _onConfigureKeys`);
 	}
 
 	private _onConfigureSound(e): void {

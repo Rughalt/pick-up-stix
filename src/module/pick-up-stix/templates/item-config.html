@@ -13,16 +13,17 @@
         {{/if}}
 
         {{#if user.isGM}}
-          <div class="flexcol" style="flex: 0 0 180px;">
+          <div class="flexcol container-options-wrapper" style="flex: 0 0 180px;">
             {{#if isContainer}}
-              <div class="flexrow" style="justify-content: flex-start; align-items: center; margin-bottom: 5px;">
+              <div class="flexrow" style="justify-content: flex-start; align-items: center;">
                 <input id="canCloseCheckbox" type="checkbox" name="flags.pick-up-stix.pick-up-stix.canClose" data-dtype="Boolean">
                 <label style="flex: unset;">Can close</label>
               </div>
             {{/if}}
 
             {{#if isToken}}
-              <div class="flexrow" style="flex: unset; margin-bottom: 5px;">
+              <div class="flexrow" style="flex: unset; align-items: center;">
+                <span style="flex: unset; margin-right: 5px;">Size</span>
                 <input id="scale" value="{{object.width}}" name="width" data-dtype="Number" type="range" min=".1" max="2" step=".1">
                 <span id="scaleSpan" style="flex: 0 0 40px;" class="range-value">{{object.width}}</span>
               </div>
@@ -32,6 +33,11 @@
               <div class="flexrow configure-sound" style="justify-content: center;">
                 <i style="flex: unset; margin-right: 5px;" class="fas fa-music"></i>
                 <span>Configure sounds</span>
+              </div>
+
+              <div class="flexrow configure-keys" style="justify-content: center;">
+                <i style="flex: unset; margin-right: 5px;" class="fas fa-key"></i>
+                <span>Add Key</span>
               </div>
             {{/if}}
           </div>
