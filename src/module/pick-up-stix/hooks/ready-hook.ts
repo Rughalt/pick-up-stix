@@ -243,7 +243,7 @@ export async function readyHook() {
 		}
 	};
 
-	EntitySheetConfig.registerSheet(Item, 'pick-up-stix', ItemConfigApplication, { types: [ 'container' ], makeDefault: true });
+	// EntitySheetConfig.registerSheet(Item, 'pick-up-stix', ItemConfigApplication, { types: [ 'container' ], makeDefault: true });
 
 	const activeVersion = game.modules.get('pick-up-stix').data.version;
 	const previousVersion = game.settings.get('pick-up-stix', SettingKeys.version);

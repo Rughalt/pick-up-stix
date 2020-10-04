@@ -124,7 +124,9 @@ export default class ItemConfigApplication extends FormApplication {
 	}
 
 	private _onConfigureKeys(e): void {
-		console.log(`pick-up-stix | ItemConfigApplication ${this.appId} | _onConfigureKeys`);
+    console.log(`pick-up-stix | ItemConfigApplication ${this.appId} | _onConfigureKeys`);
+
+
 	}
 
 	private _onConfigureSound(e): void {
@@ -176,7 +178,8 @@ export default class ItemConfigApplication extends FormApplication {
 			isToken: this._token instanceof Token,
 			object: this._token.data,
 			user: game.user,
-			quantityDataPath
+			quantityDataPath,
+			numberOfKeys: this.object.getFlag('pick-up-stix', 'pick-up-stix.container.keys')?.length ?? 0
 		};
 
 		if (this._currencyEnabled) {
@@ -390,10 +393,6 @@ export default class ItemConfigApplication extends FormApplication {
 		console.log(`pick-up-stix | ItemConfigApplication ${this.appId} | _updateObject called with args:`);
 		console.log([e, duplicate(formData)]);
 
-		if (this._token.getFlag('pick-up-stix', 'pick-up-stix.itemType') === ItemType.CONTAINER) {
-			formData.img = this._token.getFlag('pick-up-stix', 'pick-up-stix.container.isOpen') ? this._token.getFlag('pick-up-stix', 'pick-up-stix.container.imageOpenPath') : this._token.getFlag('pick-up-stix', 'pick-up-stix.conatiner.imageClosePath');
-		}
-
 		const tokenLoot: ContainerLoot = duplicate(this.object.getFlag('pick-up-stix', `pick-up-stix.container.loot`) ?? {});
 
 		if (e.type === 'change') {
@@ -413,6 +412,10 @@ export default class ItemConfigApplication extends FormApplication {
 					return itemData;
 				}));
 			});
+		}
+
+		if (this._token.getFlag('pick-up-stix', 'pick-up-stix.itemType') === ItemType.CONTAINER) {
+			formData.img = this._token.getFlag('pick-up-stix', 'pick-up-stix.container.isOpen') ? this._token.getFlag('pick-up-stix', 'pick-up-stix.container.imageOpenPath') : this._token.getFlag('pick-up-stix', 'pick-up-stix.conatiner.imageClosePath');
 		}
 
 		if (this._currencyEnabled) {

@@ -16,7 +16,6 @@ const dropCanvasHandler = async (canvas, dropData) => {
 export async function onCanvasReady(...args) {
 	console.log(`pick-up-stix | onCanvasReady | call width args:`);
 	console.log(args);
-	console.log(game.user);
 
   canvas?.tokens?.placeables?.forEach(async (p: PlaceableObject) => {
 		const flags: PickUpStixFlags = p.getFlag('pick-up-stix', 'pick-up-stix');
