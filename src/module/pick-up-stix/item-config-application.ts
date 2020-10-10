@@ -37,11 +37,13 @@ export default class ItemConfigApplication extends FormApplication {
 		});
 	}
 
-	constructor(private _token: Token, private _controlledToken: Token) {
+	private _controlledToken;
+
+	constructor(private _token: Token) {
 		super(_token, {});
 
 		console.log(`pick-up-stix | ItemConfigApplication ${this.appId} | constructor called with:`)
-		console.log([this._token, this._controlledToken]);
+		console.log([this._token]);
 
 		this._currencyEnabled = !game.settings.get('pick-up-stix', SettingKeys.disableCurrencyLoot);
 
@@ -112,7 +114,7 @@ export default class ItemConfigApplication extends FormApplication {
 		$(html).find(`input[type="text"]`).prop('readonly', !game.user.isGM);
 		$(html).find(`input[type="text"]`).prop('disabled', 	!game.user.isGM);
 
-		$(html).find('input#canCloseCheckbox').prop('checked', this._token.getFlag('pick-up-stix', 'pick-up-stix.canClose') ?? true);
+		$(html).find('input#canCloseCheckbox').prop('checked', this._token.getFlag('pick-up-stix', 'pick-up-stix.conatiner.canClose') ?? true);
 
 		if (this._token) {
 			$(html).find('input#scale').val(this._token?.data?.width ?? 1);
