@@ -1,7 +1,8 @@
-import { SocketMessageType, PickUpStixSocketMessage, ItemType, PickUpStixFlags } from "../models";
+import { SocketMessageType, PickUpStixSocketMessage, ItemType } from "../models";
 import ItemConfigApplication from "../item-config-application";
 import { SettingKeys } from "../settings";
-import { getCurrencyTypes, versionDiff } from "../../../utils";
+import { versionDiff } from "../../../utils";
+import { createEntity, deleteEntity, deleteLootTokenData, saveLootTokenData } from "../main";
 
 declare class EntitySheetConfig {
 	static registerSheet(
@@ -70,8 +71,40 @@ export async function readyHook() {
 	}
 
 	const activeVersion = game.modules.get('pick-up-stix').data.version;
-	// const previousVersion = game.settings.get('pick-up-stix', SettingKeys.version);
-	await game.settings.set('pick-up-stix', SettingKeys.version, activeVersion);
+	const previousVersion = game.settings.get('pick-up-stix', SettingKeys.version);
+
+	if (game.user.isGM) {
+		await game.settings.set('pick-up-stix', SettingKeys.version, activeVersion);
+	}
+
+	const diff = versionDiff(activeVersion, previousVersion);
+	if (diff < 0) {
+		console.log(`pick-up-stix | readyHook | current version ${activeVersion} is lower than previous version ${previousVersion}`);
+	}
+	else if (diff > 0) {
+		console.log(`pick-up-stix | readyHook | current version ${activeVersion} is greater than previous version ${previousVersion}`);
+	}
+	else {
+		console.log(`pick-up-stix | readyHook | current version ${activeVersion} the same as the previous version ${previousVersion}`);
+	}
+
+	// one-time notification to the 12 series
+	if ((!previousVersion || versionDiff(previousVersion, '0.12.0') === -1) && /\d+\.12\.\d+/.test(activeVersion)) {
+		new Dialog({
+			title: `Pick-Up-Six`,
+			content: `<p>If you are upgrading from a previous version to the 0.12.x release, then any current loot that you may have
+			created will need to be recreated. I am hopeful that any releases in the future will have better migration scripts to help
+			with moving data from one format to another when needed.</p>
+			<p>I apologize for the inconvenience.</p>
+			<p>This message will not display again.</p>`,
+			buttons: {
+				ok: {
+					label: 'OK'
+				}
+			},
+			default: 'ok'
+		})
+	}
 
 	socket = game.socket;
 	socket.on('module.pick-up-stix', async (msg: PickUpStixSocketMessage) => {
@@ -109,6 +142,18 @@ export async function readyHook() {
 				break;
 			case SocketMessageType.createItemToken:
 				await Token.create(msg.data);
+				break;
+			case SocketMessageType.saveLootTokenData:
+				saveLootTokenData(msg.data.sceneId, msg.data.tokenid, msg.data.lootData);
+				break;
+			case SocketMessageType.deleteLootTokenData:
+				deleteLootTokenData(msg.data.sceneId, msg.data.tokenId);
+				break;
+			case SocketMessageType.createEntity:
+				createEntity(msg.data.data, msg.data.options);
+				break;
+			case SocketMessageType.deleteEntity:
+				deleteEntity(msg.data.uuid);
 				break;
 		}
 	});
