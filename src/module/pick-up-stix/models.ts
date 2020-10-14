@@ -26,10 +26,18 @@ export interface DropData {
 
 	// x and y postion where the item was dropped, this would need to be converted into world coordinates
 	x: number,
-	y: number
+	y: number,
+
+	// this is the type that comes from foundry. We'll test for this when dropping on the item config
+	// application to ensure we are only accepting the "Item" types
+	type?: string
 }
 
 export interface PickUpStixFlags {
+	// when creating a new Item Entity to configure for tokens, it's marked as a template
+	// these are dummy items that shouldn't live after the token is gone.
+	isTemplate?: boolean;
+
 	itemType: ItemType;
 
 	// if the item becomes an owned item, then we need to know who the owner is
@@ -75,14 +83,18 @@ export enum SocketMessageType {
 	updateEntity,
 	updateActor,
 	createOwnedEntity,
-	createItemToken
+	createItemToken,
+	saveLootTokenData,
+	deleteLootTokenData,
+	createEntity,
+	deleteEntity
 }
 
 export interface PickUpStixSocketMessage {
 	// user ID of the sender
 	sender: string;
 	type: SocketMessageType;
-	data: any;
+	data?: any;
 }
 
 export enum ItemType {
