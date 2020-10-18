@@ -93,20 +93,3 @@ export function getPriceDataPath(): string {
 
   return path;
 }
-
-export const deleteToken = async (token: Token): Promise<void> => {
-  console.log(`pick-up-stix | deleteToken with args:`);
-  console.log(token);
-
-  if (game.user.isGM) {
-    await canvas.scene.deleteEmbeddedEntity('Token', token.id);
-    return;
-  }
-
-  const msg: PickUpStixSocketMessage = {
-    sender: game.user.id,
-    type: SocketMessageType.deleteToken,
-    data: token.id
-  }
-  socket.emit('module.pick-up-stix', msg);
-}
